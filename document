@@ -1,0 +1,104 @@
+Title: Backup and Restore Library - Bash Script
+
+1.Introduction:
+The Backup and Restore Library is a Bash script designed to provide backup and restore functionality for directories and files. It utilizes common Unix utilities like tar, gzip, and GnuPG (gpg) to archive, compress, and encrypt data for secure storage and retrieval. 
+
+
+2.Purpose:
+The purpose of the Backup and Restore Library is to automate the backup and restore process, allowing users to easily safeguard their data and restore it when needed. The script offers flexibility by allowing the user to specify the source directory, backup directory, encryption key, and retention period for backups.
+
+
+3.Design Decisions:
+
+##in backup_restore_lib.sh
+
+3.1. Parameter Validation:
+
+*.The script includes functions to validate backup and restore parameters to ensure the correct number of parameters are provided and that the necessary directories exist.
+
+*.The backup function expects four parameters: source_directory, backup_directory, encryption_key, and days.
+
+*.The restore function expects three parameters: backup_directory, restore_directory, and decryption_key.
+
+
+3.2. Backup Process:
+
+*.The backup process begins with parameter validation to ensure the existence of the source and backup directories.
+
+*.A new backup directory is created based on the current date, replacing any whitespace or colons in the date with underscores.
+
+*.The script iterates over all directories in the source directory, checks their modification date,and creates a tar.gz archive for directories modified within the specified number of days.
+
+*.Each tar.gz file is encrypted using the provided encryption key, and the original tar.gz file is deleted.
+
+*.The script then iterates over all files in the source directory, checks their modification date, and creates tar.gz files for files modified within the specified number of days.
+
+*.The tar archive is updated with each file, and each tar.gz file is encrypted and then deleted.
+
+*.The script compresses the tar archive using gzip and encrypts the resulting .gz file.
+
+*.The encrypted backup files are copied to a remote server using scp.
+
+*.Cleanup is performed by deleting the temporary files and directories
+
+
+
+
+
+3.3. Restore Process:
+
+*.The restore process begins with parameter validation to ensure the existence of the backup and restore directories.
+
+*.A temporary directory is created to store the decrypted backup files during the restore process.
+
+*.The encrypted backup files are decrypted using the provided decryption key and saved in the temporary directory.
+
+*.The decrypted tar.gz files are extracted to the restore directory.
+
+*.Cleanup is performed by deleting the temporary directory.
+
+
+
+##in backup.sh
+
+in the backup.sh script we call 2 function  validate_backup_params and backup from backup_restore_lib.sh
+
+##in restore.sh
+
+in the restore.sh script we call 2 function  validate_restore_params and restore from backup_restore_lib.sh
+
+
+
+4.Assumptions:
+
+4.1. Environment Assumptions:
+
+*The script assumes a Unix-like environment where the necessary utilities (tar, gzip, GnuPG) are installed and available.
+
+*The user running the script has appropriate permissions to access and manipulate the source, backup, and restore directories.
+
+*The encryption and decryption keys provided by the user are correct and valid for the backup and restore operations.
+
+*The remote server for copying backup files is accessible and properly configured.
+  
+
+
+4.2. Directory Assumptions:
+
+*The script assumes that the backup and restore directories are empty or do not contain conflicting files or directories that may interfere with the backup or restore process.
+
+*The restore process is designed to overwrite existing files or directories in the restore directory with the backup data.
+
+
+4.3. Backup Assumptions:
+
+*The script assumes that the provided number of days is a positive integer representing the maximum age of files or directories to be included in the backup operation.
+
+
+
+5.Conclusion:
+
+*The Backup and Restore Library Bash script provides a flexible and automated solution for backing up
+
+
+

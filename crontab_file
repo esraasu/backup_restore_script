@@ -1,0 +1,13 @@
+#To configure a cron job to run the backup script every day, you can follow these steps:
+
+#Open the cron table for editing by running crontab -e command.
+#Add the following line at the end of the file to schedule the backup script to run at a specific time (e.g., 2 AM):
+
+0 2 * * * /path/to/backup.sh /path/to/source/directory /path/to/backup/directory encryption_key days
+
+#<backup.sh>: The path of the backup_script
+#<source_directory>: The directory that you want to back up.
+#<backup_directory>: The directory where the backups will be stored.
+#<encryption_key>: The encryption key used to encrypt the backups.
+#<days>: The number of days within which files should be considered for backup.
+
